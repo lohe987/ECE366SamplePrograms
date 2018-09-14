@@ -1,5 +1,8 @@
 #ECE 366 Sample Program 1
 # Author: Trung Le,  Wenjing Rao
+#
+#This program loads numbers in array ( total of 15 elements) and calculate
+#absolute value of each, then proceed to store back into array
 .data
 	array1: .word -1, -2, 3, 5, -6, 0, 7, -2, 4, -7, -10, 1, -9, 11, 14
 	
