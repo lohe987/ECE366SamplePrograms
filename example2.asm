@@ -24,6 +24,7 @@ exit:		li $v0,10			# End program execution
 		syscall	
 
 				
-finish:		sw $t1,8($t0)
+finish:		
+		sw $t1,8($t0)
 		j exit
 
