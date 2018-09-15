@@ -27,3 +27,5 @@ _convert:	sw $a0,0($t0)			# Store number back to array
 convert: 
 		sub $a0,$0, $a0
 		j _convert
+
+exit:
