@@ -11,8 +11,8 @@
 	
 
 .text
-		addi $t0,$0,0x2000		# 'array1' starts at 0x10010000.   Store base address to $t0
-		addi $t1,$t1,15			# There are total 15 elements in array1.   Store count to $t1
+		addi $t0,$0,0x2000		# 'array1' starts at 0x2000, use $t0 for base address
+		addi $t1,$0,15			# $t1 as counter: 15, 14, 13, ...1, 0
 		
 begin:
 		lw $a0,0($t0)			# Load each number in 'array1' to $a0
