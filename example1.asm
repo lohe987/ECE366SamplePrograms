@@ -24,17 +24,6 @@ _convert:	sw $a0,0($t0)			# Store number back to array
 		beq $t1,$t2,exit		# Are we finished?   If so exit, else loop back
 		j begin
 	
-	
-exit: 		li $v0,10			# End program execution
-		syscall				# 
-	
-	
-	
-	
-	
-	
-	
-	
 convert: 
 		sub $a0,$0, $a0
 		j _convert
