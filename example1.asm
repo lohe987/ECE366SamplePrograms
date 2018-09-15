@@ -3,12 +3,14 @@
 #
 #This program loads numbers in array ( total of 15 elements) and calculate
 #absolute value of each, then proceed to store back into array
+
+# setting: memory configuration -> Compact (Text section begins at 0, Data begins at 0x2000)
 .data
 	array1: .word -1, -2, 3, 5, -6, 0, 7, -2, 4, -7, -10, 1, -9, 11, 14
 	
 
 .text
-		addi $t0,$t0,0x10010000		# 'array1' starts at 0x10010000.   Store base address to $t0
+		addi $t0,$0,0x2000		# 'array1' starts at 0x10010000.   Store base address to $t0
 		addi $t1,$t1,15			# There are total 15 elements in array1.   Store count to $t1
 		
 begin:
