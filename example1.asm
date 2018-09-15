@@ -1,8 +1,9 @@
 #ECE 366 Sample Program 1
 # Author: Trung Le,  Wenjing Rao
 #
-#This program loads numbers in array ( total of 15 elements) and calculate
-#absolute value of each, then proceed to store back into array
+#This program checks the numbers in memory (array1 with 15 words) 
+#and stores back the absolute value of each number in array1.
+
 
 # setting: memory configuration -> Compact (Text section begins at 0, Data begins at 0x2000)
 .data
