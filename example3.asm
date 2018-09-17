@@ -7,16 +7,16 @@
 
 .data
 	A:	.word	0, -1, 0xFFFF0000, 0x0F0F0F0F, 0x33333333, 0xCCCCCCCC, 
-			0x66666666, 0xFFFF, 0x99999999
-	B:	.word 	5,8,-2,-1, -1, -1, -1, -1, -1
-	C:	.word	10, 20, 30, 40, 50, 60, 70, 80, 90
+			0x66666666, 0xFFFF
+	B:	.word 	5,8,-2,-1, -1, -1, -1, -1
+	C:	.word	10, 20, 30, 40, 50, 60, 70, 80
 	D: 	.word	0xAABBCCDD	# marker of boundary. 
 
 .text
 	addi $t0,$t0,0x2000		# Base address of array A
-	addi $t1,$t0,36			# Base address of array B  
-	addi $t2,$t0,72			# Base address of array C
-	addi $t3,$0,9			# init counter = 9 (# in each array) 	
+	addi $t1,$t0,32			# Base address of array B  
+	addi $t2,$t0,64			# Base address of array C
+	addi $t3,$0,8			# init counter = 8 (# in each array) 	
 
 loop:	
 	lw $s0,0($t0)			# Load number of array A[i] into $s0
