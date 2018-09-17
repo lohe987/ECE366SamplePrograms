@@ -13,7 +13,7 @@ array1: .word -1, -2, 3, 5, -6, 0, 7, -2, 4, -7, -10, 1, -9, 11, 14
 	
 
 .text
-		addi $t0,$0,0x2000		# array1 starts @ 0x2000, $t0 (=$9) for base address
+		addi $t0,$0,0x2000		# array1 starts @ 0x2000, $t0 (=$8) for base address
 		addi $t1,$0,15			# $t1 as counter: 15, 14, 13, ...1, 0
 		
 begin:		lw $s0, 0($t0)			# Load each number in 'array1' to $s0
