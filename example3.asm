@@ -21,8 +21,8 @@
 loop:	
 	lw $s0,0($t0)			# Load number of array A[i] into $s0
 	lw $s1,0($t1)			# Load number of array B[i] into $s1
-	xor $s3,$s1,$s2			# C[i] = A[i] XOR B[i]
-	sw $s3,0($t2)			# store C[i] back into array
+	xor $s2,$s0,$s1			# C[i] = A[i] XOR B[i]
+	sw $s2,0($t2)			# store C[i] back into array
 
 	addi $t0,$t0,4			# Increment i for A[i], B[i], C[i]
 	addi $t1,$t1,4
