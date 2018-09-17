@@ -8,7 +8,7 @@
 .data
 	A:	.word	0, -1, 0xFFFF0000, 0x0F0F0F0F, 0x33333333, 0xCCCCCCCC, 
 			0x66666666, 0xFFFF
-	B:	.word 	5,8,-2,-1, -1, -1, -1, -1
+	B:	.word 	5,8,-2,-1, -3, -4, -5, -6
 	C:	.word	10, 20, 30, 40, 50, 60, 70, 80
 	D: 	.word	0xAABBCCDD	# marker of boundary. 
 
