@@ -1,6 +1,6 @@
 #ECE 366 Sample Program 3
 # Author: Trung Le,  Wenjing Rao
-
+#
 #	This program contains 3 arrays: A , B, C
 #	It calculates C[i] = A[i] XOR B[i]	
 #	and stores back into array C
@@ -8,8 +8,8 @@
 .data
 	A:	.word	0, -1, 0xFFFF0000, 0x0F0F0F0F, 0x33333333, 0xCCCCCCCC, 
 			0x66666666, 0xFFFF, 0x99999999
-	B:	.word 	5,8,-2,-3215,433,77,12,-85,2
-	C:	.word	-1, -2, -3, -4, -5, -6, -7, -8, -9
+	B:	.word 	5,8,-2,-1, -1, -1, -1, -1, -1
+	C:	.word	10, 20, 30, 40, 50, 60, 70, 80, 90
 	D: 	.word	0xAABBCCDD	# marker of boundary. 
 
 .text
