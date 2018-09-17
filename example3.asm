@@ -1,4 +1,4 @@
-#ECE 366 Sample Program 2
+#ECE 366 Sample Program 3
 # Author: Trung Le,  Wenjing Rao
 
 #	This program contains 3 arrays: A , B, C
