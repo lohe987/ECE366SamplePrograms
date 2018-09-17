@@ -15,18 +15,18 @@
 		addi $t1,$0,15			# $t1 as counter: 15, 14, 13, ...1, 0
 		
 begin:
-		lw $a0,0($t0)			# Load each number in 'array1' to $a0
-		slt $a1, $a0, $0		# Compare if number < 0   ( NEGATIVE ) , then convert to absolute number
+		lw $s0,0($t0)			# Load each number in 'array1' to $s0
+		slt $s1, $s0, $0		# Compare if number < 0   ( NEGATIVE ) , then convert to absolute number
 						# Otherwise skip
-		bne $a1, $0, convert		
-_convert:	sw $a0,0($t0)			# Store number back to array
+		bne $s1, $0, convert		
+_convert:	sw $s0,0($t0)			# Store number back to array
 		addi $t0,$t0,4			# increment array1's base address
 		addi $t2,$t2,1			# increment count
 		beq $t1,$t2,exit		# Are we finished?   If so exit, else loop back
 		j begin
 	
 convert: 
-		sub $a0,$0, $a0
+		sub $s0,$0, $s0
 		j _convert
 
 exit:
