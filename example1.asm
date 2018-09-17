@@ -31,3 +31,4 @@ convert:	sub $s0,$0, $s0
 
 exit:		j exit				# program finished: dead loop 
 						# to stay here forever, prevent PC from +4
+						# change in class
