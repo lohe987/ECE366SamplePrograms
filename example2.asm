@@ -6,9 +6,9 @@
 #	and store back the result into data memory (Z).
 
 .data 
-		x: .word 240
-		y: .word 42	
-		z: .word -1	
+		x: .word 240	# Mem[0x2000]
+		y: .word 42	# Mem[0x2004]
+		z: .word -1	# Mem[0x2008]
 	
 .text
 		addi $t0, $t0, 0x2000		# address of x = 0x2000 => $t0
@@ -18,15 +18,11 @@ loop:
 		sub $t3,$t1,$t2			# t3 = t1 - t2 = X - Y
 		slt $s0, $t3,$0			# If X-Y < 0 , then we found the X%Y result
 		bne $s0,$0, done
-		sub $t1,$t1,$t2			# Else, we have not found the result yet, continue substracting
-						# until finished
-		j loop
-
+		sub $t1,$t1,$t2			# Else, we have not found the result yet 
+		j loop				# continue substracting until finished
 
 exit:		j exit
 
-				
-done:		
-		sw $t1,8($t0)			# z is at Mem[0x2008]
+done:		sw $t1,8($t0)			# z is at Mem[0x2008]
 		j exit
 
