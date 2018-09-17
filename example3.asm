@@ -18,10 +18,10 @@
 	addi $t3,$0,9			# Each array contains 9 elements each	
 
 loop:	
-	lw $s0,0($t0)			# Load number of array A into $a0
-	lw $s1,0($t1)			# Load number of array B into $a1
-	xor $s3,$s1,$s2			# C = A XOR B
-	sw $s3,0($t2)			# store C back into array
+	lw $s0,0($t0)			# Load number of array A[i] into $s0
+	lw $s1,0($t1)			# Load number of array B[i] into $s1
+	xor $s3,$s1,$s2			# C[i] = A[i] XOR B[i]
+	sw $s3,0($t2)			# store C[i] back into array
 	subi $t3,$t3,1			# Decrement count
 	addi $t0,$t0,4			# Increment address of A,B and C
 	addi $t1,$t1,4
