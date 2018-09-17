@@ -1,6 +1,6 @@
-#ECE 366 Sample Program 2
+# ECE 366 Sample Program 2
 # Author: Trung Le,  Wenjing Rao
-
+#
 #	This program loads 2 numbers from data memory (say, X and Y ) 
 # 	finds the modulo of X%Y by substracting operation
 #	and store back the result into data memory (Z).
@@ -15,14 +15,12 @@
 		lw $t1, 0($t0)			# now $t1 stores X (@ Mem[0x2000])
 		lw $t2, 4($t0)			# now $t2 stores Y (@ Mem[0x2004])
 loop:	
-		sub $t3,$t1,$t2			# t3 = t1 - t2 = X - Y
-		slt $s0, $t3,$0			# If X-Y < 0 , then we found the X%Y result
+		sub $t3,$t1,$t2			# $t3 = X - Y
+		slt $s0, $t3,$0			# If X-Y < 0 , then we should stop
 		bne $s0,$0, done
-		sub $t1,$t1,$t2			# Else, we have not found the result yet 
-		j loop				# continue substracting until finished
+		add $t1,$t3,$0			# Else, update X = X-Y 
+		j loop				# continue substracting Y
 
-exit:		j exit
-
-done:		sw $t1,8($t0)			# z is at Mem[0x2008]
-		j exit
+done:		sw $t1,8($t0)			# current X is solution => Mem[0x2008]
+exit:		j exit				# loop forever to stop here
 
