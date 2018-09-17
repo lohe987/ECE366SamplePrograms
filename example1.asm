@@ -29,4 +29,4 @@ convert:
 		sub $s0,$0, $s0
 		j _convert
 
-exit:
+exit:		j exit	
