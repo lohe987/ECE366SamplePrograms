@@ -16,17 +16,17 @@
 		
 begin:
 		lw $s0,0($t0)			# Load each number in 'array1' to $s0
-		slt $s1, $s0, $0		# Compare if number < 0   ( NEGATIVE ) , then convert to absolute number
-						# Otherwise skip
-		bne $s1, $0, convert		
+		slt $s1, $s0, $0		# Compare if number < 0   ( NEGATIVE )				
+		bne $s1, $0, convert		# if so go to "convert" 
+
 _convert:	sw $s0,0($t0)			# Store number back to array
-		addi $t0,$t0,4			# increment array1's base address
-		addi $t2,$t2,1			# increment count
-		beq $t1,$t2,exit		# Are we finished?   If so exit, else loop back
+		addi $t0,$t0,4			# increment address by 4 to get ready for the next number
+		subi $t1,$t1,1			# decrement counter
+		beq $t1,$0,exit			# Are we finished?   If so (counter == 0), exit, else loop back
 		j begin
-	
+
 convert: 
 		sub $s0,$0, $s0
 		j _convert
 
-exit:		j exit	
+exit:		j exit				# program finished: dead loop to stay here forever, prevent PC +4
