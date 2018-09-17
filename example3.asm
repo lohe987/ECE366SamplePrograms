@@ -13,7 +13,7 @@
 	D: 	.word	0xAABBCCDD	# marker of boundary. 
 
 .text
-	addi $t0,$t0,0x2000		# Base address of array A
+	addi $t0,$zero,0x2000		# Base address of array A
 	addi $t1,$t0,32			# Base address of array B  
 	addi $t2,$t0,64			# Base address of array C
 	addi $t3,$0,8			# init counter = 8 (# in each array) 	
