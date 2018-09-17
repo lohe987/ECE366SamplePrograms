@@ -18,10 +18,10 @@
 	addi $t3,$0,9			# Each array contains 9 elements each	
 
 loop:	
-	lw $a0,0($t0)			# Load number of array A into $a0
-	lw $a1,0($t1)			# Load number of array B into $a1
-	xor $a3,$a1,$a2			# C = A XOR B
-	sw $a3,0($t2)			# store C back into array
+	lw $s0,0($t0)			# Load number of array A into $a0
+	lw $s1,0($t1)			# Load number of array B into $a1
+	xor $s3,$s1,$s2			# C = A XOR B
+	sw $s3,0($t2)			# store C back into array
 	subi $t3,$t3,1			# Decrement count
 	addi $t0,$t0,4			# Increment address of A,B and C
 	addi $t1,$t1,4
@@ -31,6 +31,4 @@ loop:
 	j loop
 
 
-exit:	
-	li $v0,10			# End program execution
-	syscall
+exit:	j exit			# deadloop after finishing
