@@ -8,10 +8,11 @@
 .data
 	A:	.word	1,2,7,9,11,713,69,0,-1
 	B:	.word 	5,8,-2,-3215,433,77,12,-85,2
-	C:	.word	0,0,0,0,0,0,0,0,0
+	C:	.word	-1, -2, -3, -4, -5, -6, -7, -8, -9
+	D: 	.word	0xAABBCCDD	# marker of boundary. This SHOULD NOT BE MODIFIED
 
 .text
-	addi $t0,$t0,0x10010000		# Base address of array A
+	addi $t0,$t0,0x2000		# Base address of array A
 	addi $t1,$t0,36			# Base address of array B  
 	addi $t2,$t0,72			# Base address of array C
 	addi $t3,$0,9			# Each array contains 9 elements each	
