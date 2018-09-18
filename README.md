@@ -3,6 +3,8 @@
 Instructor: Wenjing Rao.  
 Teaching Assistant: Trung Le.  
 
+.gitignore: tells git which files (usually local temp or non-text files) to ignore (i.e., not bother looking at)
+
 example1.asm: going through an array of 15 words, and store back the absolute value of each number.
 
 example2.asm: compute X % Y by repeated subtracting Y from X
