@@ -82,7 +82,7 @@ def processBin(addr,binary):
 
         op = "beq"
         
-        print("Instruction: "+op + " $" + rs +",$"+rt+","+offset)
+        print("Instruction: "+op + " $" + rs +",$"+rt+","+imm)
         print("If $"+rs+" == $"+rt+", then next_PC = 0x"+ format(cur_PC+(int(imm)<<2)+4,'08x'))
         print("Else next_PC = 0x", format(cur_PC + 4,'08x'))
 
@@ -98,7 +98,7 @@ def processBin(addr,binary):
        
         op = "bne"
         
-        print("Instruction: "+op + " $" + rs +",$"+rt+","+ offset)
+        print("Instruction: "+op + " $" + rs +",$"+rt+","+ imm)
         print("If $"+rs+" != $"+rt+", then next_PC = 0x"+ format(cur_PC+(int(imm)<<2)+4,'08x'))
         print("Else next_PC = 0x", format(cur_PC + 4,'08x'))
 
