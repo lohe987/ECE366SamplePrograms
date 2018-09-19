@@ -79,24 +79,27 @@ def processBin(addr,binary):
             imm = str(-imm)
         else:
             imm = str(imm)
-        offset = imm
 
         op = "beq"
         
         print("Instruction: "+op + " $" + rs +",$"+rt+","+offset)
-        print("If $"+rs+" == $"+rt+", then next_PC = 0x"+ format(cur_PC+(int(offset)<<2)+4,'08x'))
+        print("If $"+rs+" == $"+rt+", then next_PC = 0x"+ format(cur_PC+(int(imm)<<2)+4,'08x'))
         print("Else next_PC = 0x", format(cur_PC + 4,'08x'))
 
     elif(binary[0:6] == "000101"): # BNE instr
         rs = str(int(binary[6:11],2))
         rt = str(int(binary[11:16],2))
-        offset = int(binary[16:32],2)
+        imm = int(binary[16:32],2)
+        if(binary[16]=='1'):        # negative imm part processing
+            imm = 65535 - imm + 1
+            imm = str(-imm)
+        else:
+            imm = str(imm)
        
         op = "bne"
-
         
         print("Instruction: "+op + " $" + rs +",$"+rt+","+ offset)
-        print("If $"+rs+" != $"+rt+", then next_PC = 0x"+ format(cur_PC+(int(offset)<<2)+4,'08x'))
+        print("If $"+rs+" != $"+rt+", then next_PC = 0x"+ format(cur_PC+(int(imm)<<2)+4,'08x'))
         print("Else next_PC = 0x", format(cur_PC + 4,'08x'))
 
     elif(binary[0:6] == "000010"): # JUMP instr
