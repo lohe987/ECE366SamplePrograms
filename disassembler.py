@@ -1,7 +1,7 @@
 # Authors: Trung Le, Wenjing Rao
 
-# processHex convert hex instruction into binary instruction
-# return result in term of string
+# processHex convert a MIPS instruction of Hex into binary 
+# return result as a string
 def processHex(line):
     string = ''
     for i in range(2,10):
@@ -14,18 +14,19 @@ def processHex(line):
     return string
 
 
-# processAddr takes in integer form of address, and convert it into 8-bit hex string
+# processAddr takes an integer (addr) , and converts it into an 8-digit hex string
 def processAddr(addr):
     string =format(addr,'08x')
     return string
 
-# processBin 
-# param: addr = integer form of current address PC
-#        binary = the instruction in term of binary
+# processBin explains what a MIPS instruction (in binary) is doing
+# param: addr = (integer form) current instruction address (=PC)
+#        binary = a MIPS instruction in machine code binary
 # output: 
-#       Print out each instruction's meaning, current PC, next PC
+#       Print out each instruction's functionality, current PC, next PC
 # Supported instrs:
 #   ADD,ADDI,SUB,XOR,SLT, BEQ, BNE, J
+
 def processBin(addr,binary):
     cur_PC = addr
     next_PC= 0
