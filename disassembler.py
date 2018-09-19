@@ -73,7 +73,13 @@ def processBin(addr,binary):
     elif(binary[0:6] == "000100"): # BEQ instr
         rs = str(int(binary[6:11],2))
         rt = str(int(binary[11:16],2))
-        offset = str(int(binary[16:32],2))
+        imm = int(binary[16:32],2)
+        if(binary[16]=='1'):        # negative imm part processing
+            imm = 65535 - imm + 1
+            imm = str(-imm)
+        else:
+            imm = str(imm)
+        offset = imm
 
         op = "beq"
         
