@@ -1,4 +1,58 @@
-init R1,6
-init R3,2
-stre R3,(R3)
+load R1,(R0)
+# R1 contains P
+init R0,1
+sub R1,R0
+# Let's not calculate 6^1
+sub R1,R0
+# Lets not calculate 6^2
+
+
+init R2,6
+#R2 is base value
+
+
+add R3,R2
+add R3,R2
+add R3,R2
+add R3,R2
+add R3,R2
+add R3,R2
+# 1 iteration of power
+
+sub R2,R2
+add R2,R3
+# move result into base value
+
+init R0, 1
+sub R1,R0
+# R1 = R1 - 1.  In other word, P = P - 1
+
+load R0,(R0)
+sltR0 R1,R0
+# Check if finished or not
+
+bezR0 2
+jump 2
+jump -13
+
+
+
+# Finished calculation 6^P here
+# Result at R2
+init R1,17
+# Base for substracting
+init R3,0
+
+sub R2,R1
+sltR0 R2,R3
+# Is result < 0 ? 
+# If so, finished MOD calculation
+# Else, loop back
+bezR0 2
+jump 2
+jump -4
+
+add R2,R1
+init R0,2
+stre R2,(R0)
 finish
