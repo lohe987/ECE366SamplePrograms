@@ -170,7 +170,8 @@ def simulate(I,Nsteps,debug_mode,Memory):
     while(not(finished)):
         fetch = I[PC]
         DIC += 1
-        print(fetch)
+        if(debug_mode):
+            print(fetch)
         fetch = fetch.replace("R","")       # Delete all the 'R' to make things simpler
         if (fetch[0:4] == "init"):
             fetch = fetch.replace("init ","")
