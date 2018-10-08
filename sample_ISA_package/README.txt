@@ -10,3 +10,11 @@ Parameters:
 d_mem.txt   Data memory containing 16-bits binary each line
 i_mem.txt   Instr memory containing the assembly instr for simulation
 
+Behavior:
+In Simulation's debugging mode, program will run for every # steps ( provided by user ), and outputting
+current PC , and state of all registers. At 'finish' instruction, program terminates and write
+everything back into d_mem.txt
+
+In Simulation's normal mode, program runs without interruption and output state of all registers
+at the end. At 'finish' instruction, program terminates and write everything back into d_mem.txt
+
