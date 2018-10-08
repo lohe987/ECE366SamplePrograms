@@ -159,7 +159,7 @@ def assemble(I,Nlines):
             print(op)
 
 
-def simulate(I):
+def simulate(I,Nsteps):
     print("ECE366 Fall 2018 ISA Design: Simulator")
     print()
     PC = 0              # Program-counter
@@ -252,9 +252,11 @@ def simulate(I):
             PC = PC + imm
         elif(fetch[0:6] == "finish"):
             finished = True
-        print("Registers R0-R3: ", Reg)
-        print("Memory: ",Memory)
-        print()
+        if ( (DIC % Nsteps) == 0):
+            print("Registers R0-R3: ", Reg)
+            print("Memory: ",Memory)
+            print()
+        
     print("******** Simulation finished *********")
     print("Dynamic Instr Count: ",DIC)
     print("Registers R0-R3: ",Reg)
@@ -264,10 +266,10 @@ def simulate(I):
 def main():
     input_file = open("input.txt","r")
     debug_mode = False  # is machine in debug mode?  
-    Nsteps = 1          # How many cycle to run before output statistics
+    Nsteps = 3          # How many cycle to run before output statistics
     Nlines = 0          # How many instrs total in input.txt  
     Instruction = []    # all instructions will be stored here
-    mode = 2            # 1 = Simulation + assembler
+    mode = 1            # 1 = Simulation 
                         # 2 = disassembler
                         # 3 = assembler
     for line in input_file:
@@ -278,7 +280,7 @@ def main():
         Nlines +=1
 
     if(mode == 1):   # Check wether to use disasembler or assembler or simulation 
-        simulate(Instruction)
+        simulate(Instruction,Nsteps)
     elif(mode == 2):
         disassemble(Instruction,Nlines)
     else:
