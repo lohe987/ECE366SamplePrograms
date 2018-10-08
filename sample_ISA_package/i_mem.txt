@@ -1,0 +1,4 @@
+init R1,6
+init R3,2
+stre R3,(R3)
+finish
