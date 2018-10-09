@@ -7,6 +7,8 @@ Simulator has 2 modes:
 
 ## ISA Design:
 ![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/sample_ISA_package/github.png)
+![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/sample_ISA_package/github2.png)
+
 
 ## Parameters:
 - d_mem.txt : Data memory containing 16-bits binary each line
