@@ -6,7 +6,10 @@
 #                         output the state of each reg, and PC
 #            Normal mode: Execute program all at once
 
+ISA Design:
+Located in 'github.png'
 ![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/sample_ISA_package/github.png)
+
 Parameters:
 d_mem.txt   Data memory containing 16-bits binary each line
 i_mem.txt   Instr memory containing the assembly instr for simulation
