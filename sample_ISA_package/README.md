@@ -40,9 +40,10 @@ Currently contains the program 6^P%17. This is just the basic add-substract algo
 ```       
 i_mem_2.txt       
 ```
-The program PERFECT_MATCHING. Another example of how this ISA would work
+The program PERFECT_MATCHING. Another example of how this ISA would work.  
 <br />
-    
+  
+  
 ```        
 Simulator.py    
 ```
