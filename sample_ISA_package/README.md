@@ -1,5 +1,5 @@
 # Project: ISA Design
-Authors: Trung Le, Wenjing Rao.
+## * Authors: Trung Le, Wenjing Rao.
 This program is a simulator packed with both assembler and disassembler.
 Simulator has 2 modes:
 -Debug mode:  Execute program every # steps and output the state of each reg, and PC.
