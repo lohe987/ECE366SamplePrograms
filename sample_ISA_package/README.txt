@@ -6,6 +6,7 @@
 #                         output the state of each reg, and PC
 #            Normal mode: Execute program all at once
 
+![alt text](https://gyazo.com/719ac9be029e829e912ec4c0e5cd9831)
 Parameters:
 d_mem.txt   Data memory containing 16-bits binary each line
 i_mem.txt   Instr memory containing the assembly instr for simulation
