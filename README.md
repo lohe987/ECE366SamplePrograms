@@ -16,3 +16,6 @@ example3.asm: three word arrays: A, B, C each of 9 elements, going through them 
 - under Python folder:
 
 disassembler.py takes input of MIPS_hex.txt and explains what each instruction does.
+
+- under ISA package:  
+Project 2: ISA Design example. Including code, data memory,instr memory and examples
