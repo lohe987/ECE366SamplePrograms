@@ -35,15 +35,23 @@ P in mem[0],  T in mem[3], pattern array in mem[8:107]
 i_mem.txt       
 ```
 Currently contains the program 6^P%17. This is just the basic add-substract algorithm to calculate power/modulus manually.This was meant for example of how ISA would work.  
-  
+<br />
+
+```       
+i_mem_2.txt       
+```
+The program PERFECT_MATCHING. Another example of how this ISA would work
+<br />
     
 ```        
 Simulator.py    
 ```
 Python file with simulator packed with assembler/disassembler in 1 package. If 'disassembler' mode is chosen, input file should be in binary format  
+<br />
   
             
 ```
 input.txt 
 ```
 Example of how input file for disassembler would look like
+<br />
