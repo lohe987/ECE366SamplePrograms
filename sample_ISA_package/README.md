@@ -28,7 +28,7 @@ d_mem.txt
 ```
 Currently contains example data memory, where 
 P in mem[0],  T in mem[3], pattern array in mem[8:107]  
-  
+<br />
     
         
 ```       
