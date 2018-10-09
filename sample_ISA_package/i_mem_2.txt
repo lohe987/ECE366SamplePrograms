@@ -1,0 +1,37 @@
+init R2,8
+# Base value of pattern array
+
+init R0,3
+load R1,(R0)
+# Load T from mem[3]
+
+load R0,(R2)
+# Load each pattern array into R0
+
+sub R0,R1
+# Comparing by substract one by another,  if ==0 PERFECT MATCH.  else not perfect mat
+bezR0 3
+jump 3
+bezR0 -6
+
+addi R3,1
+# R3 is counter of best matching
+addi R2,1
+# increment base value by 1 to get ready for next loop
+init R0,108
+sltR0 R2,R0
+# See if we reach 107 target base value yet ?
+
+init R1,1
+xor R0,R1
+# Since we don't have Branch-Not-Equal-Zero,  we flip R0 to have same functionality
+##
+bezR0 -7
+# If not finished, branch back to loading next value
+# Note: Since ISA only gives branch [-8,7] range, we need double branching
+
+init R0,5
+stre R3,(R0)
+finish
+
+
