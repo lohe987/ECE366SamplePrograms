@@ -32,6 +32,6 @@ bezR0 -7
 
 init R0,5
 stre R3,(R0)
-finish
+jump 0
 
 
