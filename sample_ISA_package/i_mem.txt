@@ -55,4 +55,4 @@ jump -4
 add R2,R1
 init R0,2
 stre R2,(R0)
-finish
+jump 0
