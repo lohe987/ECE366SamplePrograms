@@ -4,7 +4,7 @@ This program is a simulator packed with both assembler and disassembler.
 Simulator has 2 modes:  
 -Debug mode:  Execute program every # steps and output the state of each reg, and PC.  
 -Normal mode: Execute program all at once  
-NOTE: For your Project 3 , the simulator should read in i_mem.txt as MACHINE CODE, unlike the sampple's simulator, which reads in i_mem.txt as assembly code  
+NOTE: For your Project 3 , the simulator should read in i_mem.txt as MACHINE CODE, unlike the example's simulator, which reads in i_mem.txt as assembly code  
 
 ## ISA Design:
 ![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/sample_ISA_package/github.png)
