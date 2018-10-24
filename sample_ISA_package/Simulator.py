@@ -249,7 +249,11 @@ def simulate(I,Nsteps,debug_mode,Memory):
             fetch = fetch.replace("jump ","")
             fetch = fetch.split(",")
             imm = int(fetch[0])
-            PC = PC + imm
+            if(imm == 0):
+                finished = True
+            else:
+                PC = PC + imm
+            
         elif(fetch[0:6] == "finish"):
             finished = True
         if(debug_mode):
