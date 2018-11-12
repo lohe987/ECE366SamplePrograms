@@ -22,7 +22,7 @@ blk_offset = int(math.log(total_blk,2))
 mem_space = 4096 # Memory addr starts from 2000 , ends at 3000.  Hence total space of 4096
 
 
-def simulate(Instruction):
+def simulate(Instruction,InstructionHex):
     print("***Starting simulation***")
     print("Settings:")
     print('Cache block size: '+ str(blk_size) +' bits')
@@ -43,26 +43,34 @@ def simulate(Instruction):
         DIC += 1
         fetch = Instruction[PC]
         if (fetch[0:32] == '00010000000000001111111111111111'):
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " : Deadloop. Ending program")
             finished = True
         elif (fetch[0:6] == '000000' and fetch[26:32] == '100000'): # ADD
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "add $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
             PC += 1
             Register[int(fetch[16:21],2)] = Register[int(fetch[6:11],2)] + Register[int(fetch[11:16],2)]
+
         elif(fetch[0:6] == '000000' and fetch[26:32] == '100010'): # SUB
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sub $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
             PC += 1
             Register[int(fetch[16:21],2)] = Register[int(fetch[6:11],2)] - Register[int(fetch[11:16],2)]
         elif(fetch[0:6] == '001000'): # ADDI
-            PC += 1
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "addi $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(imm) )
+            PC += 1
             Register[int(fetch[11:16],2)] = Register[int(fetch[6:11],2)] + imm
         elif(fetch[0:6] == '000100'): # BEQ
-            PC += 1
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "beq $" + str(int(fetch[6:11],2)) + ",$" +str(int(fetch[11:16],2)) + "," + str(imm) )
+            PC += 1
             PC = PC + imm if (Register[int(fetch[6:11],2)] == Register[int(fetch[11:16],2)]) else PC
         elif(fetch[0:6] == '000101'): # BNE
-            PC += 1
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "bne $" + str(int(fetch[6:11],2)) + ",$" +str(int(fetch[11:16],2)) + "," + str(imm) )
+            PC += 1
             PC = PC + imm if Register[int(fetch[6:11],2)] != Register[int(fetch[11:16],2)] else PC
         elif(fetch[0:6] == '000000' and fetch[26:32] == '101010'): # SLT
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "slt $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
             PC += 1
             Register[int(fetch[16:21],2)] = 1 if Register[int(fetch[6:11],2)] < Register[int(fetch[11:16],2)] else 0
         elif(fetch[0:6] == '101011'): # SW
@@ -71,8 +79,10 @@ def simulate(Instruction):
                 print("Runtime exception: fetch address not aligned on word boundary. Exiting ")
                 print("Instruction causing error:", hex(int(fetch,2)))
                 exit()
+            imm = int(fetch[16:32],2)
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sw $" + str(int(fetch[6:11],2)) + "," +str(imm + Register[int(fetch[6:11],2)] - 8192) + "(0x2000)" )
             PC += 1
-            imm = int(fetch[16:32],2)# if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
+            
             index = int(fetch[32-blk_offset-2:32-2],2)
             if ( Valid[index] == 0): # Cache miss
                 Misses += 1
@@ -95,8 +105,10 @@ def simulate(Instruction):
                 print("Runtime exception: fetch address not aligned on word boundary. Exiting ")
                 print("Instruction causing error:", hex(int(fetch,2)))
                 exit()
+            imm = int(fetch[16:32],2)
+            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "lw $" + str(int(fetch[6:11],2)) + "," +str(imm + Register[int(fetch[6:11],2)] - 8192) + "(0x2000)" )
             PC += 1
-            imm = int(fetch[16:32],2)# if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
+            
             # Cache access: 
             # First check cache for any hit based on valid bit and index of cache
             index = int(fetch[32-blk_offset-2:32-2],2)
@@ -124,7 +136,7 @@ def simulate(Instruction):
     print("***Finished simulation***")
 
     print("Registers:",Register)
-    print("PC:",PC)
+    print("PC:",PC*4)
     print("DIC:",DIC)
     print("Cache misses:",Misses)
     print("Cache hits:",Hits)
@@ -138,15 +150,17 @@ def simulate(Instruction):
 def main():
     I_file = open("i_mem.txt","r")
     Instruction = []    # array containing all instructions to execute         
+    InstructionHex = []
     for line in I_file:
         if (line == "\n" or line[0] =='#'):              # empty lines,comments ignored
             continue
         line = line.replace('\n','')
+        InstructionHex.append(line)
         line = format(int(line,16),"032b")
         Instruction.append(line)
         
     
-    simulate(Instruction)
+    simulate(Instruction,InstructionHex)
 
 
 
