@@ -26,9 +26,9 @@ Currently contains example of an MIPS assembly file, which is located in Project
 
 ## Simulation vs MARS:
 Result of simulation after running example i_mem.txt:  
-![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/Cache_Simulator/githubp4new.png)
+![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/MIPS_sim/githubp4new.png)
   
 Result of MARS:  
-![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/Cache_Simulator/githubp4_1.png)
+![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/MIPS_sim/githubp4_1.png)
 
 ### As you can see, your MIPS_sim should be able to output of what the MARS' results are as well
