@@ -3,15 +3,8 @@
 
 # This Python program simulates a restricted subset of MIPS instructions
 # and output 
-# Settings:
-#       Multi-Cycle CPU, i.e lw takes 5 cycles,beq takes 3 cycles, others are 4 cycles
+# Settings: Multi-Cycle CPU, i.e lw takes 5 cycles, beq takes 3 cycles, others are 4 cycles
 
-import math
-# For sake of simple example, let's have all the settings as global-variables 
-# instead of seperate config file
-blk_size = 32    # each block is 32 bits
-total_blk = 8    # 8 blocks in cache
-blk_offset = int(math.log(total_blk,2))
 mem_space = 4096 # Memory addr starts from 2000 , ends at 3000.  Hence total space of 4096
 
 
@@ -35,6 +28,7 @@ def simulate(Instruction,InstructionHex,debugMode):
         if (fetch[0:32] == '00010000000000001111111111111111'):
             print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " : Deadloop. Ending program")
             finished = True
+
         elif (fetch[0:6] == '000000' and fetch[26:32] == '100000'): # ADD
             if(debugMode):
                 print("Cycles " + str(Cycle) + ":")
@@ -54,7 +48,8 @@ def simulate(Instruction,InstructionHex,debugMode):
             Cycle += 4
             fourCycles += 1
             Register[int(fetch[16:21],2)] = Register[int(fetch[6:11],2)] - Register[int(fetch[11:16],2)]
-        elif(fetch[0:6] == '001000'): # ADDI
+
+        elif(fetch[0:6] == '001000'):                               # ADDI
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
             if(debugMode):
                 print("Cycles " + str(Cycle) + ":")
@@ -64,7 +59,8 @@ def simulate(Instruction,InstructionHex,debugMode):
             Cycle += 4
             fourCycles += 1
             Register[int(fetch[11:16],2)] = Register[int(fetch[6:11],2)] + imm
-        elif(fetch[0:6] == '000100'): # BEQ
+
+        elif(fetch[0:6] == '000100'):                               # BEQ
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
             if(debugMode):
                 print("Cycles " + str(Cycle) + ":")
@@ -74,6 +70,7 @@ def simulate(Instruction,InstructionHex,debugMode):
             PC += 1
             threeCycles += 1
             PC = PC + imm if (Register[int(fetch[6:11],2)] == Register[int(fetch[11:16],2)]) else PC
+
         elif(fetch[0:6] == '000101'): # BNE
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
             if(debugMode):
@@ -84,6 +81,7 @@ def simulate(Instruction,InstructionHex,debugMode):
             Cycle += 3
             threeCycles += 1
             PC = PC + imm if Register[int(fetch[6:11],2)] != Register[int(fetch[11:16],2)] else PC
+
         elif(fetch[0:6] == '000000' and fetch[26:32] == '101010'): # SLT
             if(debugMode):
                 print("Cycles " + str(Cycle) + ":")
@@ -93,7 +91,8 @@ def simulate(Instruction,InstructionHex,debugMode):
             PC += 1
             fourCycles += 1
             Register[int(fetch[16:21],2)] = 1 if Register[int(fetch[6:11],2)] < Register[int(fetch[11:16],2)] else 0
-        elif(fetch[0:6] == '101011'): # SW
+
+        elif(fetch[0:6] == '101011'):                               # SW
             #Sanity check for word-addressing 
             if ( int(fetch[30:32])%4 != 0 ):
                 print("Runtime exception: fetch address not aligned on word boundary. Exiting ")
@@ -109,7 +108,7 @@ def simulate(Instruction,InstructionHex,debugMode):
             fourCycles += 1
             Memory[imm + Register[int(fetch[6:11],2)] - 8192]= Register[int(fetch[11:16],2)] # Store word into memory
 
-        elif(fetch[0:6] == '100011'): # ********LOAD WORD********
+        elif(fetch[0:6] == '100011'):                               # LW
             #Sanity check for word-addressing 
             if ( int(fetch[30:32])%4 != 0 ):
                 print("Runtime exception: fetch address not aligned on word boundary. Exiting ")
@@ -137,11 +136,11 @@ def simulate(Instruction,InstructionHex,debugMode):
 
 
 def main():
-    print("Welcome to ECE366 MIPS_sim, would you like to run simulator in debug mode ? ")
+    print("Welcome to ECE366 sample MIPS_sim, choose the mode of running i_mem.txt: ")
     debugMode =True if  int(input("1 = debug mode         2 = normal execution\n"))== 1 else False
 
     I_file = open("i_mem.txt","r")
-    Instruction = []    # array containing all instructions to execute         
+    Instruction = []            # array containing all instructions to execute         
     InstructionHex = []
     for line in I_file:
         if (line == "\n" or line[0] =='#'):              # empty lines,comments ignored
