@@ -1,7 +1,7 @@
 # Project: Cache Simulation       
 ## * Authors: Trung Le, Wenjing Rao*  
 This Python program reads in MIPS instruction in hex and simulates its architecture, outputing  the result of registers, cache hit/miss and Dynamic Instruction Count (DIC).  
-Note: This program also simulates the STORE_WORD (sw) instruction , which you do not need to do for your Project 4.
+### Note: This program also simulates the STORE_WORD (sw) instruction , which you do not need to do for your Project 4.
 
 ## Settings:  
 Instructions supported: add, sub, addi, beq, bne, slt, lw ,sw.  
