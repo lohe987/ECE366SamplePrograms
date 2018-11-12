@@ -1,7 +1,6 @@
 # Project: MIPS_sim     
 ## * Authors: Trung Le, Wenjing Rao*  
-This Python program reads in MIPS instruction in hex and simulates its architecture, outputing  the result of registers, cache hit/miss and Dynamic Instruction Count (DIC).  
-### Note: This program also simulates the STORE_WORD (sw) instruction , which you do not need to do for your Project 4.
+These sample Python programs show how to read in a file of i_mem.txt (MIPS instruction in hex) and simulates its architecture, outputing  the result of registers, cache hit/miss and Dynamic Instruction Count (DIC).  
 
 ## Settings:  
 Instructions supported: add, sub, addi, beq, bne, slt, lw ,sw.  
@@ -13,8 +12,9 @@ Deadloop at "0x1000ffff"
 ## Files:
 ```
 cache.py
+mips_sim.py
 ```
-Python file to simulates MIPS ISA with limited instructions supported
+Python files to simulates MIPS ISA, and cache hit/miss with limited instructions supported
 <br />
   
   
