@@ -30,3 +30,5 @@ Result of simulation after running example i_mem.txt:
   
 Result of MARS:  
 ![alt text](https://github.com/lohe987/ECE366SamplePrograms/blob/master/Cache_Simulator/githubp4_1.png)
+
+### As you can see, your MIPS_sim should be able to output of what the MARS' results are as well
