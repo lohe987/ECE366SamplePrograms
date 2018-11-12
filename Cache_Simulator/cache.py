@@ -4,7 +4,7 @@
 # This Python program simulates cache behavior from a valid MARS program 
 # and output simple statistics such as DIC, hit/miss rate of cache.
 # Settings:
-#       Single-Cycle CPU
+#       Single-Cycle CPU, i.e lw/sw takes 5 cycles,beq takes 3 cycles, others are 4 cycles
 #       Total of 4096 memory spaces
 #       Direct-mapped cache, block size 32 bits ,total 8 blocks
 # NOTE: Since this is a simple Cache simulator *WITHOUT* replacement policy (Least Recently Used, etc),
@@ -22,12 +22,11 @@ blk_offset = int(math.log(total_blk,2))
 mem_space = 4096 # Memory addr starts from 2000 , ends at 3000.  Hence total space of 4096
 
 
-def simulate(Instruction,InstructionHex):
+def simulate(Instruction,InstructionHex,debugMode):
     print("***Starting simulation***")
     print("Settings:")
     print('Cache block size: '+ str(blk_size) +' bits')
     print("Number of total blocks: "+ str(total_blk))
-
     Register = [0,0,0,0,0,0,0,0]    # initialize all values in registers to 0
     Memory = [0 for i in range(mem_space)] 
     Valid =  [0 for i in range(total_blk)]              # valid bit
@@ -37,6 +36,11 @@ def simulate(Instruction,InstructionHex):
     Hits = 0
     PC = 0
     DIC = 0
+    Cycle = 1
+    threeCycles = 0 # frequency of how many instruction takes 3 cycles
+    fourCycles = 0  #                                         4 cycles
+    fiveCycles = 0  #                                         5 cycles
+
     finished = False
     while(not(finished)):
     
@@ -46,32 +50,62 @@ def simulate(Instruction,InstructionHex):
             print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " : Deadloop. Ending program")
             finished = True
         elif (fetch[0:6] == '000000' and fetch[26:32] == '100000'): # ADD
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "add $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "add $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
+                print("Taking 4 cycles \n")
             PC += 1
+            Cycle += 4
+            fourCycles += 1
             Register[int(fetch[16:21],2)] = Register[int(fetch[6:11],2)] + Register[int(fetch[11:16],2)]
 
         elif(fetch[0:6] == '000000' and fetch[26:32] == '100010'): # SUB
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sub $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sub $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
+                print("Taking 4 cycles \n")
             PC += 1
+            Cycle += 4
+            fourCycles += 1
             Register[int(fetch[16:21],2)] = Register[int(fetch[6:11],2)] - Register[int(fetch[11:16],2)]
         elif(fetch[0:6] == '001000'): # ADDI
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "addi $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(imm) )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "addi $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(imm) )
+                print("Taking 4 cycles \n")
             PC += 1
+            Cycle += 4
+            fourCycles += 1
             Register[int(fetch[11:16],2)] = Register[int(fetch[6:11],2)] + imm
         elif(fetch[0:6] == '000100'): # BEQ
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "beq $" + str(int(fetch[6:11],2)) + ",$" +str(int(fetch[11:16],2)) + "," + str(imm) )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "beq $" + str(int(fetch[6:11],2)) + ",$" +str(int(fetch[11:16],2)) + "," + str(imm) )
+                print("Taking 3 cycles \n")
+            Cycle += 3
             PC += 1
+            threeCycles += 1
             PC = PC + imm if (Register[int(fetch[6:11],2)] == Register[int(fetch[11:16],2)]) else PC
         elif(fetch[0:6] == '000101'): # BNE
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "bne $" + str(int(fetch[6:11],2)) + ",$" +str(int(fetch[11:16],2)) + "," + str(imm) )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "bne $" + str(int(fetch[6:11],2)) + ",$" +str(int(fetch[11:16],2)) + "," + str(imm) )
+                print("Taking 3 cycles \n")
             PC += 1
+            Cycle += 3
+            threeCycles += 1
             PC = PC + imm if Register[int(fetch[6:11],2)] != Register[int(fetch[11:16],2)] else PC
         elif(fetch[0:6] == '000000' and fetch[26:32] == '101010'): # SLT
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "slt $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "slt $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
+                print("Taking 4 cycles \n")
+            Cycle += 4
             PC += 1
+            fourCycles += 1
             Register[int(fetch[16:21],2)] = 1 if Register[int(fetch[6:11],2)] < Register[int(fetch[11:16],2)] else 0
         elif(fetch[0:6] == '101011'): # SW
             #Sanity check for word-addressing 
@@ -80,9 +114,13 @@ def simulate(Instruction,InstructionHex):
                 print("Instruction causing error:", hex(int(fetch,2)))
                 exit()
             imm = int(fetch[16:32],2)
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sw $" + str(int(fetch[6:11],2)) + "," +str(imm + Register[int(fetch[6:11],2)] - 8192) + "(0x2000)" )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sw $" + str(int(fetch[6:11],2)) + "," +str(imm + Register[int(fetch[6:11],2)] - 8192) + "(0x2000)" )
+                print("Taking 5 cycles \n")
             PC += 1
-            
+            Cycle += 5
+            fiveCycles += 1
             index = int(fetch[32-blk_offset-2:32-2],2)
             if ( Valid[index] == 0): # Cache miss
                 Misses += 1
@@ -106,9 +144,13 @@ def simulate(Instruction,InstructionHex):
                 print("Instruction causing error:", hex(int(fetch,2)))
                 exit()
             imm = int(fetch[16:32],2)
-            print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "lw $" + str(int(fetch[6:11],2)) + "," +str(imm + Register[int(fetch[6:11],2)] - 8192) + "(0x2000)" )
+            if(debugMode):
+                print("Cycles " + str(Cycle) + ":")
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "lw $" + str(int(fetch[6:11],2)) + "," +str(imm + Register[int(fetch[6:11],2)] - 8192) + "(0x2000)" )
+                print("Taking 5 cycles \n")
             PC += 1
-            
+            Cycle += 5
+            fiveCycles += 1
             # Cache access: 
             # First check cache for any hit based on valid bit and index of cache
             index = int(fetch[32-blk_offset-2:32-2],2)
@@ -134,20 +176,26 @@ def simulate(Instruction,InstructionHex):
 
 
     print("***Finished simulation***")
-
-    print("Registers:",Register)
-    print("PC:",PC*4)
-    print("DIC:",DIC)
-    print("Cache misses:",Misses)
-    print("Cache hits:",Hits)
-    print("Cache Hit Rate:", 100*(float(Hits)/float(Hits + Misses)))
-    print("Cache data:",Cache)
+    print("Total # of cycles: " + str(Cycle))
+    print("Dynamic instructions count: " +str(DIC) + ". Break down:")
+    print("                    " + str(threeCycles) + " instructions take 3 cycles" )
+    print("                    " + str(fourCycles) + " instructions take 4 cycles" )
+    print("                    " + str(fiveCycles) + " instructions take 5 cycles" )
+    print("Cache misses:" + str(Misses))
+    print("Cache hits:" + str(Hits))
+    print("Cache Hit Rate:" +  str(100*(float(Hits)/float(Hits + Misses))))
+    print("Registers: " + str(Register))
+    print("Cache data: " + str(Cache))
+    
     
 
 
 
 
 def main():
+    print("Welcome to ECE366 MIPS_sim, would you like to run simulator in debug mode ? ")
+    debugMode =True if  int(input("1 = debug mode         2 = normal execution\n"))== 1 else False
+
     I_file = open("i_mem.txt","r")
     Instruction = []    # array containing all instructions to execute         
     InstructionHex = []
@@ -160,7 +208,7 @@ def main():
         Instruction.append(line)
         
     
-    simulate(Instruction,InstructionHex)
+    simulate(Instruction,InstructionHex,debugMode)
 
 
 
