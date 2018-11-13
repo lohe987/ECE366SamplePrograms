@@ -38,16 +38,7 @@ def simulate(Instruction,InstructionHex,debugMode):
             Cycle += 4
             fourCycles += 1
             Register[int(fetch[16:21],2)] = Register[int(fetch[6:11],2)] + Register[int(fetch[11:16],2)]
-
-        elif(fetch[0:6] == '000000' and fetch[26:32] == '100010'): # SUB
-            if(debugMode):
-                print("Cycles " + str(Cycle) + ":")
-                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sub $" + str(int(fetch[16:21],2)) + ",$" +str(int(fetch[6:11],2)) + ",$" + str(int(fetch[11:16],2)) )
-                print("Taking 4 cycles \n")
-            PC += 1
-            Cycle += 4
-            fourCycles += 1
-            Register[int(fetch[16:21],2)] = Register[int(fetch[6:11],2)] - Register[int(fetch[11:16],2)]
+           
 
         elif(fetch[0:6] == '001000'):                               # ADDI
             imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
@@ -70,17 +61,6 @@ def simulate(Instruction,InstructionHex,debugMode):
             PC += 1
             threeCycles += 1
             PC = PC + imm if (Register[int(fetch[6:11],2)] == Register[int(fetch[11:16],2)]) else PC
-
-        elif(fetch[0:6] == '000101'): # BNE
-            imm = int(fetch[16:32],2) if fetch[16]=='0' else -(65535 -int(fetch[16:32],2)+1)
-            if(debugMode):
-                print("Cycles " + str(Cycle) + ":")
-                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "bne $" + str(int(fetch[6:11],2)) + ",$" +str(int(fetch[11:16],2)) + "," + str(imm) )
-                print("Taking 3 cycles \n")
-            PC += 1
-            Cycle += 3
-            threeCycles += 1
-            PC = PC + imm if Register[int(fetch[6:11],2)] != Register[int(fetch[11:16],2)] else PC
 
         elif(fetch[0:6] == '000000' and fetch[26:32] == '101010'): # SLT
             if(debugMode):
