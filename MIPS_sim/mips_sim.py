@@ -6,6 +6,10 @@
 # Settings: Multi-Cycle CPU, i.e lw takes 5 cycles, beq takes 3 cycles, others are 4 cycles
 
 mem_space = 4096 # Memory addr starts from 2000 , ends at 3000.  Hence total space of 4096
+# this is probably wrong:
+# MIPS is byte-addressable, so from 0x2000 to 0x3000 is a total of 0x1000 BYTES, which means
+# 0x1000 / 4 = 0x0400 words
+# we're always lw / sw here, so memory array is assumed to have 1 word per element, hence a total of 0x400 = 1024 elements.
 
 
 def simulate(Instruction,InstructionHex,debugMode):
