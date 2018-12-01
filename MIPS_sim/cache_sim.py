@@ -1,4 +1,3 @@
-
 # Authors: Trung Le, Weijing Rao
 
 # This Python program simulates cache behavior from a valid MARS program 
@@ -14,22 +13,23 @@
 import math
 # For sake of simple example, let's have all the settings as global-variables 
 # instead of seperate config file
-blk_size = 32    # each block is 32 bits
+blk_size = 4    # each block is 64 bits , or 2 words
+word_offset = int(math.log(blk_size,2))
 total_blk = 8    # 8 blocks in cache
-blk_offset = int(math.log(total_blk,2))
+set_offset = int(math.log(total_blk,2))
 mem_space = 4096 # Memory addr starts from 2000 , ends at 3000.  Hence total space of 4096
 
 
 def simulate(Instruction,InstructionHex,debugMode):
     print("***Starting simulation***")
     print("Settings:")
-    print('Cache block size: '+ str(blk_size) +' bits')
+    print('Cache block size: '+ str(blk_size) +' words')
     print("Number of total blocks: "+ str(total_blk))
     Register = [0,0,0,0,0,0,0,0]    # initialize all values in registers to 0
     Memory = [0 for i in range(mem_space)] 
     Valid =  [0 for i in range(total_blk)]              # valid bit
     Tag   =  ['0' for i in range(total_blk)]            # Tag for cache
-    Cache =  [0 for i in range(total_blk)]              # Cache data
+    Cache =  [[0 for j in range(blk_size)]  for i in range(total_blk)]              # Cache data
     Misses = 0
     Hits = 0
     PC = 0
@@ -84,26 +84,12 @@ def simulate(Instruction,InstructionHex,debugMode):
                 print("Runtime exception: fetch address not aligned on word boundary. Exiting ")
                 print("Instruction causing error:", hex(int(fetch,2)))
                 exit()
-            imm = int(fetch[16:32],2)
             if(debugMode):
                 print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "sw $" + str(int(fetch[6:11],2)) + "," +str(imm + Register[int(fetch[6:11],2)] - 8192) + "(0x2000)" )
             PC += 1
-            index = int(fetch[32-blk_offset-2:32-2],2)
-            if ( Valid[index] == 0): # Cache miss
-                Misses += 1
-                Memory[imm + Register[int(fetch[6:11],2)] - 8192]= Register[int(fetch[11:16],2)] # Store word into memory
-                Cache[index] = Register[int(fetch[11:16],2)]    # update latest value of cache
-                Valid[index] = 1    # Since we have cache miss, valid bit is now 1 after cache has updated value
-                Tag[index] = fetch[16:32-blk_offset-2]
-            else: # Valid bit is 1, now check if tag matches
-                if(Tag[index] == fetch[16:32-blk_offset-2]): # Cache hit
-                    Cache[index] = Register[int(fetch[11:16],2)] 
-                    Hits += 1
-                else: # Tag doesnt match, cache miss
-                    Misses += 1
-                    Memory[imm + Register[int(fetch[6:11],2)] - 8192]  =Register[int(fetch[11:16],2)] # Store word into memory
-                    Cache[index] = Register[int(fetch[11:16],2)]    # update latest value of cache
-                    Tag[index] = fetch[16:32-blk_offset-2]                             # Update tag
+            imm = int(fetch[16:32],2)
+            index = int(fetch[32-set_offset-2:32-2],2)
+            Memory[imm + Register[int(fetch[6:11],2)] - 8192]= Register[int(fetch[11:16],2)]
 
         elif(fetch[0:6] == '100011'): # ********LOAD WORD********
             #Sanity check for word-addressing 
@@ -112,30 +98,52 @@ def simulate(Instruction,InstructionHex,debugMode):
                 print("Instruction causing error:", hex(int(fetch,2)))
                 exit()
             imm = int(fetch[16:32],2)
-            if(debugMode):
-                print("Taking 5 cycles \n")
+            
             PC += 1
             # Cache access: 
             # First check cache for any hit based on valid bit and index of cache
-            index = int(fetch[32-blk_offset-2:32-2],2)
+            address = format(imm+Register[int(fetch[6:11],2)],"016b") # The actual address load-word is accessing
+            wordIndex = address[16-2-word_offset:16-2]  # how many bits needed to index word in each blocks
+            index = address[16-2-word_offset-set_offset:16-2-word_offset]   # how many bits needed for set indexing
+            if(debugMode):
+                print("PC =" + str(PC*4) + " Instruction: 0x" +  InstructionHex[PC] + " :" + "lw $" + str(int(fetch[11:16],2)) + ",$" +str(int(fetch[6:11],2)) + "(" + str(imm) +")" )
+                print("Address of loadword: ", address)
+                print("Word offset",wordIndex)
+                print("Set index",index)
+            wordIndex = int(wordIndex,2)
+            index = int(index,2)
             if ( Valid[index] == 0): # Cache miss
                 Misses += 1
-                Cache[index] = Memory[imm + Register[int(fetch[6:11],2)] - 8192] # Load memory into cache data
-                Register[int(fetch[11:16],2)] = Cache[index]    # Load cache data into register 
+                for i in range(blk_size):
+                    Cache[index][i] = Memory[imm + Register[int(fetch[6:11],2)] - 8192 + i*4] # Load memory into cache data
+                Register[int(fetch[11:16],2)] = Memory[imm + Register[int(fetch[6:11],2)] - 8192]    # Load data into register as well 
                 Valid[index] = 1    # Since we have cache miss, valid bit is now 1 after cache has updated value
-                Tag[index] = fetch[16:32-blk_offset-2]
+                Tag[index] = address[0:16-2-word_offset-set_offset]
+                if(debugMode):
+                    print("Cache missed due to valid bit = 0")
+                    print("Tag = " ,Tag[index])
+                    print("Cache",Cache)
             else: # Valid bit is 1, now check if tag matches
-                if(Tag[index] == fetch[16:32-blk_offset-2]): # Cache hit
+                if(Tag[index] == address[0:16-2-word_offset-set_offset]): # Cache hit
                     
-                    Register[int(fetch[11:16],2)] = Cache[index]
+                    Register[int(fetch[11:16],2)] = Cache[index][wordIndex]
                     Hits += 1
+                    if(debugMode):
+                        print("Cache hit")
+                        print("Tag = ",Tag[index])
+                        print("Cache",Cache)
                 else: # Tag doesnt match, cache miss
                     Misses += 1
-                    Cache[index] = Memory[imm + Register[int(fetch[6:11],2)] - 8192] # Load memory into cache data
-                    Register[int(fetch[11:16],2)] = Cache[index]                    # Load cache data into register
-                    Tag[index] = fetch[16:32-blk_offset-2]                             # Update tag
+                    for i in range(blk_size):
+                        Cache[index][i] = Memory[imm + Register[int(fetch[6:11],2)] - 8192 + i*4] # Load memory into cache data
+                    Register[int(fetch[11:16],2)] = Memory[imm + Register[int(fetch[6:11],2)] - 8192] # Load cache data into register
+                    Tag[index] = address[0:16-2-word_offset-set_offset]                             # Update tag
+                    if(debugMode):
+                        print("Cache missed due to tag mismatch")
+                        print("Tag = ",Tag[index])
+                        print("Cache",Cache)
+            print("")
 
-            
 
 
 
@@ -174,5 +182,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
